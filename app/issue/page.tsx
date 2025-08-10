@@ -149,12 +149,21 @@ export default function IssuePage() {
     if (!form.institutionName.trim()) return "Institution Name is required."
     if (!form.certificateName.trim()) return "Certificate Name is required."
     if (!form.certificateId.trim()) return "Certificate ID is required."
-    if (!form.year.trim() || isNaN(Number(form.year))) return "Certificate Year must be a number."
     if (!form.uri.trim()) return "Certificate URI is required."
-    if (!form.quantity.trim() || isNaN(Number(form.quantity))) return "Token Quantity must be a number."
     if (!/^0x[0-9a-fA-F]{64}$/.test(form.merkleRoot.trim()))
       return "Merkle root must be a 32-byte hex string (0x + 64 hex chars)."
     if (!account) return "Please connect your wallet first."
+
+    const yearStr = form.year.trim()
+    const qtyStr = form.quantity.trim()
+
+    if (!/^\d+$/.test(yearStr)) return "Certificate Year must be a whole number."
+    const y = Number(yearStr)
+    if (y < 1900 || y > 3000) return "Certificate Year must be between 1900 and 3000."
+
+    if (!/^\d+$/.test(qtyStr)) return "Token Quantity must be a whole number."
+    if (BigInt(qtyStr) < 1n) return "Token Quantity must be at least 1."
+
     return null
   }
 
@@ -180,10 +189,10 @@ export default function IssuePage() {
         form.institutionName.trim(),
         form.certificateName.trim(),
         form.certificateId.trim(),
-        BigInt(Number(form.year)), // certificateYear
+        BigInt(form.year.trim()), // certificateYear as uint256
         form.uri.trim(),
         form.merkleRoot.trim(), // bytes32
-        BigInt(Number(form.quantity)), // certificateTokenQuantity
+        BigInt(form.quantity.trim()), // certificateTokenQuantity as uint256
       ] as const
 
       const tx = await contract[FN_NAME](...(args as unknown as any[]))
