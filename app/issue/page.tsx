@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { type Eip1193Provider, BrowserProvider, Contract, Interface } from "ethers"
+import { type Eip1193Provider, BrowserProvider, Contract, Interface, isHexString, getBytes } from "ethers"
 
 type IssueForm = {
   institutionName: string
@@ -70,6 +70,15 @@ const iface = new Interface(FACTORY_ABI as any)
 declare global {
   interface Window {
     ethereum?: Eip1193Provider
+  }
+}
+
+function isBytes32Hex(value: string): boolean {
+  try {
+    if (!isHexString(value)) return false
+    return getBytes(value).length === 32
+  } catch {
+    return false
   }
 }
 
@@ -150,8 +159,12 @@ export default function IssuePage() {
     if (!form.certificateName.trim()) return "Certificate Name is required."
     if (!form.certificateId.trim()) return "Certificate ID is required."
     if (!form.uri.trim()) return "Certificate URI is required."
-    if (!/^0x[0-9a-fA-F]{64}$/.test(form.merkleRoot.trim()))
-      return "Merkle root must be a 32-byte hex string (0x + 64 hex chars)."
+    {
+      const root = form.merkleRoot.trim()
+      if (!/^0x[0-9a-fA-F]{64}$/.test(root) || !isBytes32Hex(root)) {
+        return "Merkle root must be a 32-byte hex string (0x + 64 hex chars)."
+      }
+    }
     if (!account) return "Please connect your wallet first."
 
     const yearStr = form.year.trim()
@@ -183,6 +196,8 @@ export default function IssuePage() {
 
       const contract = new Contract(FACTORY_ADDRESS, FACTORY_ABI as any, signer)
 
+      const merkleRootNormalized = form.merkleRoot.trim().toLowerCase()
+
       // Prepare arguments in exact ABI order
       const args = [
         account as string, // verifiedWalletAddress
@@ -191,7 +206,7 @@ export default function IssuePage() {
         form.certificateId.trim(),
         BigInt(form.year.trim()), // certificateYear as uint256
         form.uri.trim(),
-        form.merkleRoot.trim(), // bytes32
+        merkleRootNormalized, // bytes32
         BigInt(form.quantity.trim()), // certificateTokenQuantity as uint256
       ] as const
 
