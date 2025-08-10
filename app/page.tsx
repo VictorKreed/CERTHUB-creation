@@ -3,6 +3,7 @@
 import { Poppins, Inter } from "next/font/google"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import FloatingIcons from "@/components/floating-icons"
 
 import Hero from "@/components/hero"
 import Features from "@/components/features"
@@ -36,6 +37,9 @@ export default function Page() {
       <div className="absolute inset-0 opacity-25">
         <BackgroundOrbs />
       </div>
+      <div className="absolute inset-0">
+        <FloatingIcons intensity={1} interactive />
+      </div>
 
       <header className="relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -52,9 +56,9 @@ export default function Page() {
               <Link href="#benefits" className="text-sm text-slate-600 hover:text-slate-900">
                 Benefits
               </Link>
-              <Link href="/issue" className="text-sm text-slate-600 hover:text-slate-900">
-                Issue a Certificate
-              </Link>
+              <Button asChild className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white shadow-md">
+                <Link href="/issue">Issue a Certificate</Link>
+              </Button>
               <div className="hidden sm:flex gap-3">
                 <Button asChild className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white shadow-md">
                   <Link href="#register">Register Institution</Link>
