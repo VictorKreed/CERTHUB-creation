@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { type Eip1193Provider, BrowserProvider, Contract, Interface, isHexString, getBytes } from "ethers"
+import { type Eip1193Provider, BrowserProvider, Contract, Interface, isAddress, getAddress } from "ethers"
 
 type IssueForm = {
   institutionName: string
@@ -15,7 +15,7 @@ type IssueForm = {
   year: string
   uri: string
   quantity: string
-  merkleRoot: string // 0x…32 bytes
+  recipients: string // comma-separated wallet addresses
 }
 
 const DEFAULTS: IssueForm = {
@@ -25,14 +25,13 @@ const DEFAULTS: IssueForm = {
   year: "",
   uri: "",
   quantity: "",
-  merkleRoot: "",
+  recipients: "",
 }
 
 // OFFICIAL FACTORY ADDRESS (provided by you)
 const FACTORY_ADDRESS = "0x777B46e1117Fb2a0ed27e39901BaA91726A1a2b7" as const
 
-// Real ABI (provided by you) — trimmed to the parts we call/parse here for bundle size.
-// If you prefer the full ABI, you can paste it; functionally this subset is sufficient.
+// Real ABI (subset used here)
 const FACTORY_ABI = [
   {
     inputs: [
@@ -73,19 +72,10 @@ declare global {
   }
 }
 
-function isBytes32Hex(value: string): boolean {
-  try {
-    if (!isHexString(value)) return false
-    return getBytes(value).length === 32
-  } catch {
-    return false
-  }
-}
-
 export default function IssuePage() {
   const [form, setForm] = useState<IssueForm>(DEFAULTS)
   const [status, setStatus] = useState<null | {
-    type: "idle" | "error" | "pending" | "success"
+    type: "idle" | "error" | "pending" | "success" | "info"
     message: string
     tx?: string
     deployedAddress?: string
@@ -94,6 +84,11 @@ export default function IssuePage() {
   const [chainId, setChainId] = useState<string | null>(null)
   const [connecting, setConnecting] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  // Merkle-related state
+  const [generatedRoot, setGeneratedRoot] = useState<string | null>(null)
+  const [generating, setGenerating] = useState(false)
+  const [proofsCount, setProofsCount] = useState<number | null>(null)
 
   const hasProvider = typeof window !== "undefined" && !!window.ethereum
 
@@ -152,6 +147,90 @@ export default function IssuePage() {
 
   function update<K extends keyof IssueForm>(key: K, value: IssueForm[K]) {
     setForm((f) => ({ ...f, [key]: value }))
+    // invalidate generated root if recipients or other inputs change materially
+    if (key === "recipients") {
+      setGeneratedRoot(null)
+      setProofsCount(null)
+    }
+  }
+
+  // Parse recipients string into array of checksum addresses; throw on invalid
+  function parseRecipients(input: string): string[] {
+    const parts = input
+      .split(/[,\n\r\s]+/g)
+      .map((x) => x.trim())
+      .filter(Boolean)
+
+    if (parts.length === 0) {
+      throw new Error("Please enter at least one recipient address.")
+    }
+
+    const norm: string[] = []
+    for (const p of parts) {
+      if (!isAddress(p)) throw new Error(`Invalid address: ${p}`)
+      norm.push(getAddress(p))
+    }
+    // Dedupe but preserve order
+    const seen = new Set<string>()
+    const unique: string[] = []
+    for (const a of norm) {
+      if (!seen.has(a)) {
+        seen.add(a)
+        unique.push(a)
+      }
+    }
+    return unique
+  }
+
+  async function generateMerkle() {
+    try {
+      setGenerating(true)
+      setStatus({
+        type: "info",
+        message: "Merkle root is being generated, proofs file will be downloaded.",
+      })
+      const addresses = parseRecipients(form.recipients)
+
+      const res = await fetch("/api/merkle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addresses }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err?.error || "Failed to generate Merkle data.")
+      }
+      const data: {
+        root: string
+        count: number
+        addresses: string[]
+        leaves: string[]
+        proofs: Record<string, string[]>
+        params: { hash: string; sortedPairs: boolean }
+      } = await res.json()
+
+      setGeneratedRoot(data.root)
+      setProofsCount(data.count)
+      setStatus({ type: "idle", message: "Merkle root generated and proofs downloaded." })
+
+      // Trigger download of proofs JSON
+      const filename = `merkle-proofs-${Date.now()}.json`
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err: any) {
+      setStatus({ type: "error", message: err?.message || "Failed to generate Merkle root." })
+      setGeneratedRoot(null)
+      setProofsCount(null)
+    } finally {
+      setGenerating(false)
+    }
   }
 
   function validate(): string | null {
@@ -159,12 +238,6 @@ export default function IssuePage() {
     if (!form.certificateName.trim()) return "Certificate Name is required."
     if (!form.certificateId.trim()) return "Certificate ID is required."
     if (!form.uri.trim()) return "Certificate URI is required."
-    {
-      const root = form.merkleRoot.trim()
-      if (!/^0x[0-9a-fA-F]{64}$/.test(root) || !isBytes32Hex(root)) {
-        return "Merkle root must be a 32-byte hex string (0x + 64 hex chars)."
-      }
-    }
     if (!account) return "Please connect your wallet first."
 
     const yearStr = form.year.trim()
@@ -176,6 +249,14 @@ export default function IssuePage() {
 
     if (!/^\d+$/.test(qtyStr)) return "Token Quantity must be a whole number."
     if (BigInt(qtyStr) < 1n) return "Token Quantity must be at least 1."
+
+    // Recipients validation (parsed) and root presence
+    try {
+      parseRecipients(form.recipients)
+    } catch (e: any) {
+      return e?.message || "Invalid recipients."
+    }
+    if (!generatedRoot) return "Please generate the Merkle root before creating the certificate."
 
     return null
   }
@@ -193,27 +274,23 @@ export default function IssuePage() {
 
       const provider = new BrowserProvider(window.ethereum!)
       const signer = await provider.getSigner()
-
       const contract = new Contract(FACTORY_ADDRESS, FACTORY_ABI as any, signer)
 
-      const merkleRootNormalized = form.merkleRoot.trim().toLowerCase()
-
-      // Prepare arguments in exact ABI order
       const args = [
         account as string, // verifiedWalletAddress
         form.institutionName.trim(),
         form.certificateName.trim(),
         form.certificateId.trim(),
-        BigInt(form.year.trim()), // certificateYear as uint256
+        BigInt(form.year.trim()), // uint256
         form.uri.trim(),
-        merkleRootNormalized, // bytes32
-        BigInt(form.quantity.trim()), // certificateTokenQuantity as uint256
+        generatedRoot as `0x${string}`, // bytes32 (from server)
+        BigInt(form.quantity.trim()), // uint256
       ] as const
 
       const tx = await contract[FN_NAME](...(args as unknown as any[]))
       const receipt = await tx.wait()
 
-      // Try to parse CertificateDeployed event for the deployed clone address
+      // Parse event for deployed address
       let deployedAddress: string | undefined
       try {
         for (const log of receipt?.logs || []) {
@@ -223,9 +300,7 @@ export default function IssuePage() {
             break
           }
         }
-      } catch {
-        // ignore parse errors
-      }
+      } catch {}
 
       setStatus({
         type: "success",
@@ -236,6 +311,8 @@ export default function IssuePage() {
         deployedAddress,
       })
       setForm(DEFAULTS)
+      setGeneratedRoot(null)
+      setProofsCount(null)
     } catch (err: any) {
       const message = err?.shortMessage || err?.reason || err?.message || "Transaction failed."
       setStatus({ type: "error", message })
@@ -244,7 +321,7 @@ export default function IssuePage() {
     }
   }
 
-  // Basic chain explorer base (defaults to mainnet Etherscan)
+  // Explorer bases
   const explorerTxBase =
     chainId && chainId.toLowerCase() === "0x89" ? "https://polygonscan.com/tx/" : "https://etherscan.io/tx/"
   const explorerAddrBase =
@@ -275,6 +352,7 @@ export default function IssuePage() {
               status.type === "success" && "border-emerald-200 bg-emerald-50 text-emerald-700",
               status.type === "pending" && "border-blue-200 bg-blue-50 text-blue-700",
               status.type === "idle" && "border-slate-200 bg-white text-slate-700",
+              status.type === "info" && "border-blue-200 bg-blue-50 text-blue-700",
             ]
               .filter(Boolean)
               .join(" ")}
@@ -383,16 +461,35 @@ export default function IssuePage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Merkle Root (bytes32)</label>
-                <input
-                  type="text"
-                  value={form.merkleRoot}
-                  onChange={(e) => update("merkleRoot", e.target.value)}
-                  placeholder="0x... 64 hex characters"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+              {/* New Recipients input */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Recipients (comma-separated addresses)
+                </label>
+                <textarea
+                  value={form.recipients}
+                  onChange={(e) => update("recipients", e.target.value)}
+                  placeholder="0xabc..., 0xdef..., 0x123... (you can also separate by spaces or new lines)"
+                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30 min-h-[110px]"
                   required
                 />
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <Button
+                    type="button"
+                    onClick={generateMerkle}
+                    disabled={generating || !form.recipients.trim()}
+                    className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white"
+                  >
+                    {generating ? "Generating..." : "Generate Merkle Root & Download Proofs"}
+                  </Button>
+
+                  {generatedRoot && (
+                    <div className="text-xs sm:text-sm text-slate-600 break-all">
+                      Generated root: <span className="font-mono">{generatedRoot}</span>{" "}
+                      {typeof proofsCount === "number" ? `• ${proofsCount} recipients` : null}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="md:col-span-2 flex items-center justify-end gap-3 pt-2">
@@ -400,15 +497,19 @@ export default function IssuePage() {
                   type="button"
                   variant="outline"
                   className="border-slate-300 text-slate-800 hover:bg-slate-100 bg-transparent"
-                  onClick={() => setForm(DEFAULTS)}
-                  disabled={submitting}
+                  onClick={() => {
+                    setForm(DEFAULTS)
+                    setGeneratedRoot(null)
+                    setProofsCount(null)
+                  }}
+                  disabled={submitting || generating}
                 >
                   Reset
                 </Button>
                 <Button
                   type="submit"
                   className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white"
-                  disabled={submitting || !account}
+                  disabled={submitting || !account || !generatedRoot}
                 >
                   {submitting ? "Submitting..." : "Create Certificate"}
                 </Button>
