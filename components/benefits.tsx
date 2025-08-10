@@ -23,23 +23,23 @@ export default function Benefits() {
     <section id="benefits" className="relative z-10 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl">
-          <h2 className="text-3xl sm:text-4xl font-bold">Why CERTHUB</h2>
-          <p className="mt-3 text-white/80">Built for credibility, designed for the future of decentralized work.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Why CERTHUB</h2>
+          <p className="mt-3 text-slate-600">Built for credibility, designed for the future of decentralized work.</p>
         </header>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {benefits.map((b) => (
             <div
               key={b.title}
-              className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur p-6 text-white hover:bg-white/15 transition"
+              className="rounded-2xl border border-slate-200 bg-white p-6 text-slate-700 hover:bg-slate-50 transition shadow-sm"
             >
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-white/15 p-2.5 border border-white/20">
-                  <b.icon className="h-6 w-6" aria-hidden="true" />
+                <div className="rounded-lg bg-slate-100 p-2.5 border border-slate-200">
+                  <b.icon className="h-6 w-6 text-[#2a47a1]" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-semibold">{b.title}</h3>
+                <h3 className="text-xl font-semibold text-slate-900">{b.title}</h3>
               </div>
-              <p className="mt-3 text-white/85">{b.desc}</p>
+              <p className="mt-3">{b.desc}</p>
             </div>
           ))}
         </div>

@@ -2,24 +2,23 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import HeroWordmark from "@/components/hero-wordmark"
 
 export default function Hero() {
   return (
     <section className="relative z-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="py-20 sm:py-24 lg:py-28">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1
-              className="font-[var(--font-poppins)] text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight drop-shadow"
-              aria-label="CERTHUB"
-            >
-              CERTHUB
-            </h1>
-            <p className="mt-6 text-lg sm:text-xl text-white/85">
+        <div className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl text-center">
+            <h1 className="sr-only">CERTHUB</h1>
+
+            <HeroWordmark className="h-auto" />
+
+            <p className="mt-6 text-lg sm:text-xl text-slate-600">
               Secure Credentialing and Certifications on Blockchain
             </p>
-            <p className="mt-3 text-sm sm:text-base text-white/70 max-w-2xl mx-auto">
-              Issue tamper&#45;proof, verifiable certificates. Empower decentralized work and payments with trustless
+            <p className="mt-3 text-sm sm:text-base text-slate-500 max-w-2xl mx-auto">
+              Issue tamper-proof, verifiable certificates. Empower decentralized work and payments with trustless
               verification.
             </p>
 
@@ -27,31 +26,39 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur"
+                className="w-full sm:w-auto bg-[#1f3aaa] hover:bg-[#2a47a1] text-white shadow-md"
               >
                 <Link href="#register">Register Institution</Link>
               </Button>
               <Button
                 asChild
                 size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto bg-white text-[#0F1D52] hover:bg-white/90"
+                variant="outline"
+                className="w-full sm:w-auto border-slate-300 text-slate-800 hover:bg-slate-100 bg-transparent"
               >
                 <Link href="#claim">Claim Certificate</Link>
               </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="w-full sm:w-auto bg-slate-900 text-white hover:bg-slate-800"
+              >
+                <Link href="/issue">Issue a Certificate</Link>
+              </Button>
             </div>
 
-            <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-white/70">
-              <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur px-3 py-2">
-                Non&#45;transferable tokens
+            <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-slate-600">
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur px-3 py-2 shadow-sm">
+                Non-transferable tokens
               </div>
-              <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur px-3 py-2">
-                On&#45;chain revocation
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur px-3 py-2 shadow-sm">
+                On-chain revocation
               </div>
-              <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur px-3 py-2">
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur px-3 py-2 shadow-sm">
                 Merkle eligibility
               </div>
-              <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur px-3 py-2">
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur px-3 py-2 shadow-sm">
                 Verifiable profiles
               </div>
             </div>

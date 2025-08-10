@@ -10,6 +10,7 @@ import HowItWorks from "@/components/how-it-works"
 import Benefits from "@/components/benefits"
 import SiteFooter from "@/components/site-footer"
 import BackgroundOrbs from "@/components/background-orbs"
+import HeaderBrand from "@/components/header-brand"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,40 +29,41 @@ export default function Page() {
       className={[
         poppins.variable,
         inter.variable,
-        "relative min-h-screen bg-gradient-to-br from-[#00008B] to-[#4169E1] text-white antialiased",
+        "relative min-h-screen bg-gradient-to-br from-[#f8fbff] via-white to-[#eef3ff] text-slate-900 antialiased",
       ].join(" ")}
       aria-label="CERTHUB Landing Page"
     >
-      <BackgroundOrbs />
+      <div className="absolute inset-0 opacity-25">
+        <BackgroundOrbs />
+      </div>
 
       <header className="relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <Link
-              href="#"
-              className="font-bold tracking-wider text-white/90 hover:text-white"
-              aria-label="CERTHUB Home"
-            >
-              CERTHUB
-            </Link>
+            <HeaderBrand className="scale-110" />
+
             <nav className="hidden md:flex items-center gap-6">
-              <Link href="#features" className="text-sm text-white/80 hover:text-white">
+              <Link href="#features" className="text-sm text-slate-600 hover:text-slate-900">
                 Features
               </Link>
-              <Link href="#how-it-works" className="text-sm text-white/80 hover:text-white">
+              <Link href="#how-it-works" className="text-sm text-slate-600 hover:text-slate-900">
                 How it works
               </Link>
-              <Link href="#benefits" className="text-sm text-white/80 hover:text-white">
+              <Link href="#benefits" className="text-sm text-slate-600 hover:text-slate-900">
                 Benefits
               </Link>
+              <Link href="/issue" className="text-sm text-slate-600 hover:text-slate-900">
+                Issue a Certificate
+              </Link>
               <div className="hidden sm:flex gap-3">
-                <Button
-                  asChild
-                  className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur"
-                >
+                <Button asChild className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white shadow-md">
                   <Link href="#register">Register Institution</Link>
                 </Button>
-                <Button asChild variant="secondary" className="bg-white text-[#0F1D52] hover:bg-white/90">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-slate-300 text-slate-800 hover:bg-slate-100 bg-transparent"
+                >
                   <Link href="#claim">Claim Certificate</Link>
                 </Button>
               </div>

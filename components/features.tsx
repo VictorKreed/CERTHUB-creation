@@ -44,8 +44,8 @@ export default function Features() {
     <section id="features" className="relative z-10 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl">
-          <h2 className="text-3xl sm:text-4xl font-bold">Powerful features</h2>
-          <p className="mt-3 text-white/80">
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Powerful features</h2>
+          <p className="mt-3 text-slate-600">
             Everything you need to issue, claim, verify, and manage credentials on-chain.
           </p>
         </header>
@@ -54,15 +54,15 @@ export default function Features() {
           {items.map(({ title, icon: Icon, desc }) => (
             <Card
               key={title}
-              className="border-white/15 bg-white/10 text-white backdrop-blur hover:bg-white/15 hover:translate-y-[-2px] transition-all"
+              className="border-slate-200 bg-white text-slate-800 backdrop-blur hover:bg-slate-50 hover:translate-y-[-2px] transition-all shadow-sm"
             >
               <CardHeader className="flex flex-row items-center gap-3">
-                <div className="rounded-lg bg-white/15 p-2.5 border border-white/20">
-                  <Icon className="h-6 w-6" aria-hidden="true" />
+                <div className="rounded-lg bg-slate-100 p-2.5 border border-slate-200">
+                  <Icon className="h-6 w-6 text-[#2a47a1]" aria-hidden="true" />
                 </div>
-                <CardTitle className="text-white">{title}</CardTitle>
+                <CardTitle className="text-slate-900">{title}</CardTitle>
               </CardHeader>
-              <CardContent className="text-white/85">{desc}</CardContent>
+              <CardContent className="text-slate-600">{desc}</CardContent>
             </Card>
           ))}
         </div>

@@ -33,8 +33,8 @@ export default function HowItWorks() {
     <section id="how-it-works" className="relative z-10 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl">
-          <h2 className="text-3xl sm:text-4xl font-bold">How it works</h2>
-          <p className="mt-3 text-white/80">A transparent lifecycle from registration to verifiable credentials.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">How it works</h2>
+          <p className="mt-3 text-slate-600">A transparent lifecycle from registration to verifiable credentials.</p>
         </header>
 
         <ol className="mt-10 relative grid gap-6 md:gap-8">
@@ -42,21 +42,21 @@ export default function HowItWorks() {
             <li key={s.title} className="relative">
               <div className="grid md:grid-cols-[220px_1fr] gap-4 md:gap-8 items-start">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 border border-white/20">
-                    <s.icon className="h-6 w-6" aria-hidden="true" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 border border-slate-200">
+                    <s.icon className="h-6 w-6 text-[#2a47a1]" aria-hidden="true" />
                   </div>
                   <div className="text-left">
-                    <div className="text-sm text-white/70">Step {idx + 1}</div>
-                    <div className="font-semibold">{s.title}</div>
+                    <div className="text-sm text-slate-500">Step {idx + 1}</div>
+                    <div className="font-semibold text-slate-900">{s.title}</div>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur px-4 py-3 text-white/85">
+                <div className="rounded-2xl border border-slate-200 bg-white backdrop-blur px-4 py-3 text-slate-600 shadow-sm">
                   {s.desc}
                 </div>
               </div>
 
               {idx < steps.length - 1 && (
-                <div className="hidden md:flex items-center gap-2 my-4 ml-[52px] text-white/60">
+                <div className="hidden md:flex items-center gap-2 my-4 ml-[52px] text-slate-500">
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   <span className="text-xs">Next</span>
                 </div>
