@@ -1,19 +1,13 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ScrollText } from "lucide-react"
+import Logo2D from "@/components/logo-2d"
 
 export default function Hero() {
   return (
     <section className="relative z-10 px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl text-center">
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <ScrollText className="h-6 w-6 text-[#1f3aaa] opacity-60" />
-          <h1 className="text-6xl font-bold font-poppins tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
-            CERT
-            <ScrollText className="inline h-12 w-12 text-[#1f3aaa] mx-2" />
-            HUB
-          </h1>
-          <ScrollText className="h-6 w-6 text-[#1f3aaa] opacity-60" />
+        <div className="mb-8">
+          <Logo2D text="CERTHUB" className="mx-auto" glow={0.8} />
         </div>
 
         <h2 className="mb-6 text-xl font-medium text-slate-600 sm:text-2xl">
