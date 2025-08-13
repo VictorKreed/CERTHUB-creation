@@ -68,7 +68,7 @@ export default function Page() {
                   variant="outline"
                   className="border-slate-300 text-slate-800 hover:bg-slate-100 bg-transparent"
                 >
-                  <Link href="#claim">Claim Certificate</Link>
+                  <Link href="/claim">Claim Certificate</Link>
                 </Button>
               </div>
             </nav>
