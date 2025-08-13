@@ -27,6 +27,46 @@ export default function Logo2D(
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
+          <radialGradient id="orb-blue-large" cx="0.3" cy="0.3" r="0.8" gradientUnits="objectBoundingBox">
+            <stop offset="0%" stopColor="#dbeafe" stopOpacity="0.8" />
+            <stop offset="30%" stopColor="#60a5fa" stopOpacity="0.6" />
+            <stop offset="70%" stopColor="#2563eb" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#1e40af" stopOpacity="0.2" />
+          </radialGradient>
+
+          <radialGradient id="orb-blue-medium" cx="0.4" cy="0.2" r="0.9" gradientUnits="objectBoundingBox">
+            <stop offset="0%" stopColor="#bfdbfe" stopOpacity="0.7" />
+            <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.5" />
+            <stop offset="80%" stopColor="#1d4ed8" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.1" />
+          </radialGradient>
+
+          <radialGradient id="orb-gold" cx="0.2" cy="0.4" r="0.7" gradientUnits="objectBoundingBox">
+            <stop offset="0%" stopColor="#fef3c7" stopOpacity="0.6" />
+            <stop offset="30%" stopColor="#f59e0b" stopOpacity="0.4" />
+            <stop offset="70%" stopColor="#d97706" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#92400e" stopOpacity="0.1" />
+          </radialGradient>
+
+          <filter id="orb-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="
+                0 0 0 0 0.2
+                0 0 0 0 0.4
+                0 0 0 0 1
+                0 0 0 0.3 0
+              "
+              result="glow"
+            />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
           <linearGradient id="certhub-blue" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
             <stop offset="0%" stopColor="#dbeafe" />
             <stop offset="8%" stopColor="#bfdbfe" />
@@ -137,6 +177,41 @@ export default function Logo2D(
             <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#78350f" floodOpacity="0.3" />
           </filter>
         </defs>
+
+        <g opacity="0.8">
+          {/* Large blue orb - top left */}
+          <circle cx="150" cy="50" r="80" fill="url(#orb-blue-large)" filter="url(#orb-glow)">
+            <animate attributeName="r" values="80;90;80" dur="4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Medium blue orb - top right */}
+          <circle cx="1050" cy="40" r="60" fill="url(#orb-blue-medium)" filter="url(#orb-glow)">
+            <animate attributeName="r" values="60;70;60" dur="5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.5;0.7;0.5" dur="4s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Gold orb - bottom left */}
+          <circle cx="100" cy="170" r="50" fill="url(#orb-gold)" filter="url(#orb-glow)">
+            <animate attributeName="r" values="50;60;50" dur="3.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.4;0.6;0.4" dur="2.5s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Medium blue orb - bottom right */}
+          <circle cx="1100" cy="180" r="45" fill="url(#orb-blue-medium)" filter="url(#orb-glow)">
+            <animate attributeName="r" values="45;55;45" dur="4.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0.5;0.3" dur="3.5s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Small accent orbs */}
+          <circle cx="300" cy="30" r="25" fill="url(#orb-blue-large)" opacity="0.4">
+            <animate attributeName="opacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite" />
+          </circle>
+
+          <circle cx="900" cy="190" r="30" fill="url(#orb-gold)" opacity="0.3">
+            <animate attributeName="opacity" values="0.1;0.5;0.1" dur="2.8s" repeatCount="indefinite" />
+          </circle>
+        </g>
 
         <g transform="translate(600, 110)">
           {/* Scroll body */}
