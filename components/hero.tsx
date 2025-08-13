@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Logo2D from "@/components/logo-2d"
+// Replaced Logo2D with professional components from attachments
+import BrandWordmark from "@/components/brand-wordmark"
+import BackgroundOrbs from "@/components/background-orbs"
 
 export default function Hero() {
   return (
     <section className="relative z-10 px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl text-center">
+      <BackgroundOrbs density={0.9} interactive={true} />
+
+      <div className="mx-auto max-w-4xl text-center relative z-20">
         <div className="mb-8">
-          <Logo2D text="CERTHUB" className="mx-auto" glow={0.8} />
+          <BrandWordmark text="CERTHUB" sizeClass="h-20 sm:h-24 lg:h-28" variant="dark" />
         </div>
 
         <h2 className="mb-6 text-xl font-medium text-slate-600 sm:text-2xl">
