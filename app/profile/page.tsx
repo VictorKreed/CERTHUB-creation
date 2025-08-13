@@ -259,7 +259,7 @@ export default function ProfilePage() {
 
   if (!account) {
     return (
-      <main className="relative min-h-[80vh] bg-gradient-to-br from-[#f8fbff] via-white to-[#eef3ff] text-slate-900">
+      <main className="relative min-h-[80vh] bg-gradient-to-r from-blue-200 via-blue-100 to-white text-slate-900">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-6">User Profile</h1>
@@ -278,7 +278,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="relative min-h-[80vh] bg-gradient-to-br from-[#f8fbff] via-white to-[#eef3ff] text-slate-900">
+    <main className="relative min-h-[80vh] bg-gradient-to-r from-blue-200 via-blue-100 to-white text-slate-900">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

@@ -30,7 +30,7 @@ export default function Page() {
       className={[
         poppins.variable,
         inter.variable,
-        "relative min-h-screen bg-gradient-to-br from-[#f8fbff] via-white to-[#eef3ff] text-slate-900 antialiased",
+        "relative min-h-screen bg-gradient-to-r from-blue-100 via-blue-50 to-white text-slate-900 antialiased",
       ].join(" ")}
       aria-label="CERTHUB Landing Page"
     >

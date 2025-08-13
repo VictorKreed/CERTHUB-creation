@@ -28,7 +28,7 @@ export default function Hero() {
                 size="lg"
                 className="w-full sm:w-auto bg-[#1f3aaa] hover:bg-[#2a47a1] text-white shadow-md"
               >
-                <Link href="#register">Register Institution</Link>
+                <Link href="/register">Register Institution</Link>
               </Button>
               <Button
                 asChild

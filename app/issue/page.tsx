@@ -5,7 +5,6 @@ import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useEffect, useMemo, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type Eip1193Provider, BrowserProvider, Contract, Interface, isAddress, getAddress } from "ethers"
 
 type IssueForm = {
@@ -328,7 +327,7 @@ export default function IssuePage() {
     chainId && chainId.toLowerCase() === "0x89" ? "https://polygonscan.com/address/" : "https://etherscan.io/address/"
 
   return (
-    <main className="relative min-h-[80vh] bg-gradient-to-br from-[#f8fbff] via-white to-[#eef3ff] text-slate-900">
+    <main className="relative min-h-[80vh] bg-gradient-to-r from-blue-200 via-blue-100 to-white text-slate-900">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-2xl sm:text-3xl font-bold">Issue a Certificate</h1>
@@ -380,56 +379,72 @@ export default function IssuePage() {
           </div>
         )}
 
-        <Card className="mt-6 border-slate-200 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-slate-900">Certificate Metadata</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="mt-6 relative">
+          <div
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 w-32 h-4 bg-gradient-to-r from-navy-600 via-navy-700 to-navy-600 rounded-full shadow-lg"
+            style={{ background: "linear-gradient(to right, #1e3a8a, #1e40af, #1e3a8a)" }}
+          ></div>
+
+          <div
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-2 w-32 h-4 bg-gradient-to-r from-navy-600 via-navy-700 to-navy-600 rounded-full shadow-lg"
+            style={{ background: "linear-gradient(to right, #1e3a8a, #1e40af, #1e3a8a)" }}
+          ></div>
+
+          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-blue-900/30 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-blue-900/30 to-transparent pointer-events-none"></div>
+
+          <div className="relative px-8 py-8 sm:px-12 sm:py-10 bg-gradient-to-b from-blue-900 via-slate-800 to-blue-950 rounded-3xl shadow-2xl border-4 border-blue-800 overflow-hidden">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white text-center border-b-2 border-blue-400 pb-3 mb-6">
+                Certificate Metadata
+              </h2>
+            </div>
+
             <form className="grid grid-cols-1 md:grid-cols-2 gap-5" onSubmit={onSubmit}>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700">Institution Name</label>
+                <label className="block text-sm font-medium text-blue-100">Institution Name</label>
                 <input
                   type="text"
                   value={form.institutionName}
                   onChange={(e) => update("institutionName", e.target.value)}
                   placeholder="e.g., University of Blockchain"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">Certificate Name</label>
+                <label className="block text-sm font-medium text-blue-100">Certificate Name</label>
                 <input
                   type="text"
                   value={form.certificateName}
                   onChange={(e) => update("certificateName", e.target.value)}
                   placeholder="e.g., Advanced Solidity"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">Certificate ID</label>
+                <label className="block text-sm font-medium text-blue-100">Certificate ID</label>
                 <input
                   type="text"
                   value={form.certificateId}
                   onChange={(e) => update("certificateId", e.target.value)}
                   placeholder="e.g., CERT-2025-0001"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">Certificate Year</label>
+                <label className="block text-sm font-medium text-blue-100">Certificate Year</label>
                 <input
                   type="number"
                   value={form.year}
                   onChange={(e) => update("year", e.target.value)}
                   placeholder="e.g., 2025"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                   min={1900}
                   max={3000}
@@ -437,25 +452,25 @@ export default function IssuePage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700">Certificate URI</label>
+                <label className="block text-sm font-medium text-blue-100">Certificate URI</label>
                 <input
                   type="text"
                   value={form.uri}
                   onChange={(e) => update("uri", e.target.value)}
                   placeholder="e.g., ipfs://Qm... or https://example.com/metadata.json"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">Token Quantity</label>
+                <label className="block text-sm font-medium text-blue-100">Token Quantity</label>
                 <input
                   type="number"
                   value={form.quantity}
                   onChange={(e) => update("quantity", e.target.value)}
                   placeholder="e.g., 100"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   required
                   min={1}
                 />
@@ -463,14 +478,14 @@ export default function IssuePage() {
 
               {/* New Recipients input */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700">
+                <label className="block text-sm font-medium text-blue-100">
                   Recipients (comma-separated addresses)
                 </label>
                 <textarea
                   value={form.recipients}
                   onChange={(e) => update("recipients", e.target.value)}
                   placeholder="0xabc..., 0xdef..., 0x123... (you can also separate by spaces or new lines)"
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2a47a1]/30 min-h-[110px]"
+                  className="mt-1 w-full rounded-lg border-2 border-blue-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[110px]"
                   required
                 />
                 <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -478,13 +493,13 @@ export default function IssuePage() {
                     type="button"
                     onClick={generateMerkle}
                     disabled={generating || !form.recipients.trim()}
-                    className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white"
+                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                   >
                     {generating ? "Generating..." : "Generate Merkle Root & Download Proofs"}
                   </Button>
 
                   {generatedRoot && (
-                    <div className="text-xs sm:text-sm text-slate-600 break-all">
+                    <div className="text-xs sm:text-sm text-blue-100 break-all bg-white/20 px-3 py-2 rounded-lg border border-blue-400">
                       Generated root: <span className="font-mono">{generatedRoot}</span>{" "}
                       {typeof proofsCount === "number" ? `• ${proofsCount} recipients` : null}
                     </div>
@@ -496,7 +511,7 @@ export default function IssuePage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-slate-300 text-slate-800 hover:bg-slate-100 bg-transparent"
+                  className="border-blue-400 text-blue-100 hover:bg-blue-800 bg-white/10"
                   onClick={() => {
                     setForm(DEFAULTS)
                     setGeneratedRoot(null)
@@ -508,15 +523,15 @@ export default function IssuePage() {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white"
+                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                   disabled={submitting || !account || !generatedRoot}
                 >
                   {submitting ? "Submitting..." : "Create Certificate"}
                 </Button>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         <div className="mt-6 flex gap-3">
           <Button asChild className="bg-[#1f3aaa] hover:bg-[#2a47a1] text-white">
