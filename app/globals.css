@@ -1,8 +1,12 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
+/* Keep your existing dark variant behavior */
 @custom-variant dark (&:is(.dark *));
 
+/* ---------------------------
+   Design Tokens (unchanged)
+----------------------------*/
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -29,6 +33,7 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -64,6 +69,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -74,6 +80,7 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Map tokens into Tailwind theme vars */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -94,15 +101,18 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -113,6 +123,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Base layer */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -122,46 +133,39 @@
   }
 }
 
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
+/* ---------------------------
+   Landing: Dark gradient helpers
+   Scoped to <main class="dark-landing"> in app/page.tsx
+----------------------------*/
+
+/* Make text readable over the dark gradient without editing each component */
+.dark-landing :where(h1,h2,h3,h4,h5,h6,p,li,span,small,strong,em,blockquote,code) {
+  color: rgba(255, 255, 255, 0.92);
+}
+.dark-landing :where(a) {
+  color: rgba(255, 255, 255, 0.92);
+}
+.dark-landing :where(.muted, .text-muted, .subtle, .text-slate-600, .text-slate-700) {
+  color: rgba(255, 255, 255, 0.70);
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-10px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(5px) rotate(-1deg);
-  }
+/* Card / panel polish for landing sections */
+.dark-landing .glass-panel {
+  /* Subtle glass look used by landing sections */
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 1.5rem; /* 24px, matches your rounded-3xl */
 }
 
-.animate-blob {
-  animation: blob 7s infinite;
+/* Soft card borders if any component uses this class */
+.dark-landing .card-border {
+  border-color: rgba(255, 255, 255, 0.10);
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+/* Optional: slightly dim hr dividers on landing */
+.dark-landing hr {
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 0.6;
 }
