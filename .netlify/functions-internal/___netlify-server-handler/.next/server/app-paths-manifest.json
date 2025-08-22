@@ -1,0 +1,14 @@
+{
+  "/api/merkle/route": "app/api/merkle/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/set-wallet/route": "app/api/set-wallet/route.js",
+  "/inspect/page": "app/inspect/page.js",
+  "/agent/verify-institution/page": "app/agent/verify-institution/page.js",
+  "/issue/page": "app/issue/page.js",
+  "/page": "app/page.js",
+  "/docs/page": "app/docs/page.js",
+  "/claim/page": "app/claim/page.js",
+  "/update-certificate/page": "app/update-certificate/page.js",
+  "/verify/page": "app/verify/page.js",
+  "/register/page": "app/register/page.js"
+}

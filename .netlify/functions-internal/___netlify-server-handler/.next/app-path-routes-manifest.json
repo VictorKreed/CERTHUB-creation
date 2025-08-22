@@ -1,0 +1,14 @@
+{
+  "/api/merkle/route": "/api/merkle",
+  "/_not-found/page": "/_not-found",
+  "/api/set-wallet/route": "/api/set-wallet",
+  "/inspect/page": "/inspect",
+  "/agent/verify-institution/page": "/agent/verify-institution",
+  "/issue/page": "/issue",
+  "/page": "/",
+  "/docs/page": "/docs",
+  "/claim/page": "/claim",
+  "/update-certificate/page": "/update-certificate",
+  "/verify/page": "/verify",
+  "/register/page": "/register"
+}
